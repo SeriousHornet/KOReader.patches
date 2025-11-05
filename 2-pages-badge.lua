@@ -48,7 +48,7 @@ local function patchCoverBrowserPageCount(plugin)
             return
         end
         
-        -- Use the same corner_mark_size as the original code for consistency
+        -- Using the same corner_mark_size as the original code for consistency
         local corner_mark_size = Screen:scaleBySize(10)
         
         -- ==== ADD page count widget for unread books ====
@@ -62,8 +62,7 @@ local function patchCoverBrowserPageCount(plugin)
             if page_count then
                 local page_text = page_count .. " p."
                 local font_size = math.floor(corner_mark_size * page_font_size)
-                -- local font_size = page_font_size
-				
+		
                 local pages_text = TextWidget:new{
                     text = page_text,
                     face = Font:getFace("cfont", font_size),
@@ -86,11 +85,11 @@ local function patchCoverBrowserPageCount(plugin)
                 
                 -- left edge of the cover content inside the item
                 local cover_left = x + math.floor((self.width - target.dimen.w) / 2)
-				-- bottom of the cover content inside the item
+				-- bottom edge of the cover content inside the item
                 local cover_bottom = y + self.height - math.floor((self.height - target.dimen.h) / 2)
                 local badge_w, badge_h = pages_badge:getSize().w, pages_badge:getSize().h
                 
-                -- Position above the progress bar area if present; otherwise near bottom-left
+                -- Position near bottom-left
                 local pad = Screen:scaleBySize(move_from_border)
                 local pos_x_badge = cover_left + pad
                 local pos_y_badge = cover_bottom - (pad + badge_h)
