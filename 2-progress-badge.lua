@@ -3,11 +3,11 @@ User patch for Cover Browser plugin to add progress percentage badges in top rig
 ]]--
 --========================== [[Edit your preferences here]] ================================
 
-local text_size = 0.45 	-- Adjust from 0 to 1
+local text_size = 0.22 	-- Adjust from 0 to 1
 local move_on_x = 5		-- Adjust how far left the badge should sit. 
 local move_on_y = -2	-- Adjust how far up the badge should sit.
-local badge_w = 65		-- Adjust badge width
-local badge_h = 35		-- Adjust badge height
+local badge_w = 55		-- Adjust badge width
+local badge_h = 30		-- Adjust badge height
 
 --==========================================================================================
 local userpatch = require("userpatch")
@@ -27,20 +27,15 @@ local function patchCoverBrowserProgressPercent(plugin)
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
     
-    if not MosaicMenuItem then
-        logger.err("MosaicMenuItem not found - progress percent patch may not work correctly")
-        return
-    end
-
     -- Store original MosaicMenuItem paintTo method
-    local originalMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
+    local origMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
     
     -- Override paintTo method to add progress percentage badges
     function MosaicMenuItem:paintTo(bb, x, y)
-        -- First, call the original paintTo method to draw the cover normally
-        originalMosaicMenuItemPaintTo(self, bb, x, y)
+        -- Call the original paintTo method to draw the cover normally
+        origMosaicMenuItemPaintTo(self, bb, x, y)
         
-        -- Get the cover image widget (target) and dimensions
+        -- Get the cover image widget
         local target = self[1][1][1]
         if not target or not target.dimen then
             return
@@ -49,12 +44,12 @@ local function patchCoverBrowserProgressPercent(plugin)
         -- Use the same corner_mark_size as the original code for consistency
         local corner_mark_size = Screen:scaleBySize(20)
         
-        -- ==== ADD percent badge to top right corner ====
+        -- ADD percent badge to top right corner
         if self.do_hint_opened and self.been_opened and self.percent_finished and self.status ~= "complete" then
 	
 			-- Parse percent text and store as text widget
 			local percent_text = string.format("%d%%", math.floor(self.percent_finished * 100))
-			local font_size = math.floor(corner_mark_size * text_size) -- was 0.17
+			local font_size = math.floor(corner_mark_size * text_size)
 			local percent_widget = TextWidget:new{
 				text = percent_text,
 				font_size = font_size,
@@ -99,8 +94,5 @@ local function patchCoverBrowserProgressPercent(plugin)
 			end
 		end
     end
-
-    logger.info("Cover Browser progress percent badge patch applied successfully")
 end
-
 userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserProgressPercent)
