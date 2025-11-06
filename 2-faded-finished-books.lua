@@ -6,7 +6,6 @@ User patch for Cover Browser plugin to add faded look for finished books in mosa
 local fading_amount = 0.66 --Set your desired value from 0 to 1.
 --======================================================================================
 
-
 --========================== Do not modify this section ================================
 local userpatch = require("userpatch")
 local logger = require("logger")
@@ -17,18 +16,13 @@ local function patchCoverBrowserFaded(plugin)
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
     
-    if not MosaicMenuItem then
-        logger.err("MosaicMenuItem not found - faded look patch may not work correctly")
-        return
-    end
-
     -- Store original MosaicMenuItem paintTo method
-    local originalMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
+    local origMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
     
     -- Override paintTo method to add faded look for finished books
     function MosaicMenuItem:paintTo(bb, x, y)
         -- Call the original paintTo method to draw the cover normally
-        originalMosaicMenuItemPaintTo(self, bb, x, y)
+        origMosaicMenuItemPaintTo(self, bb, x, y)
         
         -- Get the cover image widget (target)
         local target = self.cover_image or self[1]
@@ -45,12 +39,9 @@ local function patchCoverBrowserFaded(plugin)
         end
     end
 
-    local originalMosaicMenuItemInit = MosaicMenuItem.init
+    local origMosaicMenuItemInit = MosaicMenuItem.init
     function MosaicMenuItem:init(item)
-        originalMosaicMenuItemInit(self, item)
+        origMosaicMenuItemInit(self, item)
     end
-    logger.info("Cover Browser faded look patch applied successfully")
 end
-
 userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserFaded)
---======================================================================================
