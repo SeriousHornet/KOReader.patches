@@ -57,6 +57,13 @@ local function patchCoverBrowserPageCount(plugin)
                 end
             end
             
+            if not page_count then
+                page_count = nil
+                if self.text then
+                    page_count = self.text:match("[Pp]%((%d+)%)")
+                end
+            end
+            
             if page_count then
                 local page_text = page_count .. " p."
                 local font_size = math.floor(corner_mark_size * page_font_size)
