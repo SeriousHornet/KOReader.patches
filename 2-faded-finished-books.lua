@@ -3,7 +3,7 @@ User patch for Cover Browser plugin to add faded look for finished books in mosa
 ]]--
 
 --========================== Edit your preferences here ================================
-local fading_amount = 0.66 --Set your desired value from 0 to 1.
+local fading_amount = 0.33 --Set your desired value from 0 to 1.
 --======================================================================================
 
 --========================== Do not modify this section ================================
@@ -28,7 +28,7 @@ local function patchCoverBrowserFaded(plugin)
         local target = self.cover_image or self[1]
         
         -- ADD faded look to finished books
-        if target and target.dimen and self.status == "complete" then
+        if target and target.dimen and self.status == "complete" and not self._fade_applied then
             -- Calculate cover position and dimensions
             local fx = x + math.floor((self.width - target.dimen.w) / 2)
             local fy = y + math.floor((self.height - target.dimen.h) / 2)
@@ -36,6 +36,7 @@ local function patchCoverBrowserFaded(plugin)
             
             -- Apply faded effect
             bb:lightenRect(fx, fy, fw, fh, fading_amount)
+            self._fade_applied = true
         end
     end
 
