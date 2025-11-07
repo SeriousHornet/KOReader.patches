@@ -2,7 +2,7 @@
 local Blitbuffer = require("ffi/blitbuffer")
 
 --========================== [[Edit your preferences here]] ================================
-local page_font_size = 0.9						-- Adjust from 0 to 1
+local page_font_size = 0.95						-- Adjust from 0 to 1
 local page_text_color = Blitbuffer.COLOR_WHITE 	-- Choose your desired color
 local border_thickness = 2 						-- Adjust from 0 to 5
 local border_corner_radius = 12 				-- Adjust from 0 to 20
@@ -21,6 +21,7 @@ local Font = require("ui/font")
 local Screen = require("device").screen
 local Size = require("ui/size")
 local BD = require("ui/bidi")
+
 
 local function patchCoverBrowserPageCount(plugin)
     -- Grab Cover Grid mode and the individual Cover Grid items
@@ -48,8 +49,12 @@ local function patchCoverBrowserPageCount(plugin)
         if not self.is_directory and not self.file_deleted and self.status ~= "complete" and not self.been_opened then
             -- Extract page count from filename
             local page_count = nil
-            if self.text then
-                page_count = self.text:match("[Pp]%((%d+)%)")
+            if self.filepath then
+                local BookInfoManager = require("bookinfomanager")
+                local bookinfo = BookInfoManager:getBookInfo(self.filepath, false)
+                if bookinfo and bookinfo.pages then
+                    page_count = bookinfo.pages
+                end
             end
             
             if page_count then
