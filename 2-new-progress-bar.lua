@@ -1,4 +1,4 @@
---[[ User patch: custom rounded progress bar for Project: Title ]]--
+--[[ User patch for KOReader to add custom rounded progress bar ]]--
 
 local userpatch   = require("userpatch")
 local logger      = require("logger")
@@ -91,3 +91,4 @@ local function patchCustomProgress(plugin)
 end
 
 userpatch.registerPatchPluginFunc("coverbrowser", patchCustomProgress)
+
