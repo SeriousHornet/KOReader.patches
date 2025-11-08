@@ -1,4 +1,4 @@
---[[ User patch for KOReader to add rounded corners to book covers ]]--
+--[[ User patch for Project title plugin to add rounded corners to book covers ]]--
 
 local userpatch  = require("userpatch")
 local logger     = require("logger")
@@ -60,7 +60,9 @@ local function patchBookCoverRoundedCorners(plugin)
             local ih = math.max(1, fh - 2*(pad + inset))
     
             local cover_border = Screen:scaleBySize(0.5)  -- tweak for thicker line
-            bb:paintBorder(ix, iy, iw, ih, cover_border, Blitbuffer.COLOR_BLACK, 0, false)
+            if not self.is_directory then
+                bb:paintBorder(ix, iy, iw, ih, cover_border, Blitbuffer.COLOR_BLACK, 0, false)
+            end
         end
 
         -- Paint rounded corners on the outer frame rect
