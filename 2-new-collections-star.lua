@@ -1,4 +1,4 @@
---[[ User patch for KOReader to add collection indicator in mosaic view ]]--
+--[[ User patch for Project Title plugin to add collection indicator in mosaic view ]]--
 
 local userpatch = require("userpatch")
 local logger = require("logger")
@@ -32,11 +32,11 @@ local function patchCoverBrowserCollectionIndicator(plugin)
             local radius = Screen:scaleBySize(10)
             local top_margin = Screen:scaleBySize(7)
 
-            -- circle center
-            local center_x = x + left_margin + radius
+            -- Use target.dimen.x and target.dimen.y which are relative to the cell
+            local center_x = target.dimen.x + left_margin + radius
             local center_y = target.dimen.y + top_margin + radius
 
-            -- draw filled black circle (remove the radius parameter for filled circle)
+            -- draw filled black circle
             bb:paintCircle(center_x, center_y, radius, Blitbuffer.COLOR_BLACK)
 
             -- Create smaller star (half the size)
@@ -57,4 +57,3 @@ local function patchCoverBrowserCollectionIndicator(plugin)
 end
 
 userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserCollectionIndicator)
-
