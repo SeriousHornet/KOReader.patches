@@ -85,3 +85,7 @@ For this to work as intended, it is suggested to uncheck all options in "Project
 
 This adds a star in a black circle to left top corner of the book to indicate that the book is part of a collection
 
+---
+
+Credits to @joshuacant, @sebdelsol and u/medinauta as I borrowed much of their code and structure.
+
