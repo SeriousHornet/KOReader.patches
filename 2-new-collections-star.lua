@@ -1,4 +1,4 @@
---[[ User patch for Project Title plugin to add collection indicator in mosaic view ]]--
+--[[ User patch for KOReader to add collection indicator in mosaic view ]]--
 
 local userpatch = require("userpatch")
 local logger = require("logger")
@@ -57,3 +57,4 @@ local function patchCoverBrowserCollectionIndicator(plugin)
 end
 
 userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserCollectionIndicator)
+
