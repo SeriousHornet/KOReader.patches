@@ -21,7 +21,7 @@ local function patchCoverBrowserFaded(plugin)
         orig_MosaicMenuItem_paint(self, bb, x, y)
 
         -- Only apply fade once per item using a flag
-        if self.status == "complete" then
+        if not self._fade_applied and self.status == "complete" then
             -- Try to locate the same "target" the base code uses
             local target = nil
             if self[1] and self[1][1] and self[1][1][1] then
@@ -42,6 +42,7 @@ local function patchCoverBrowserFaded(plugin)
 
                 -- Apply the fade only once
                 bb:lightenRect(fx, fy, tw, th, fading_amount)
+                self._fade_applied = true
             end
         end
     end
