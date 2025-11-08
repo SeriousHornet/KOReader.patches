@@ -13,12 +13,12 @@ local function patchCoverBrowserCollectionIndicator(plugin)
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
 
     -- Store original MosaicMenuItem paintTo method
-    local origMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
+    local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
     
     -- Override paintTo method to add collection indicator
     function MosaicMenuItem:paintTo(bb, x, y)
         -- Call the original paintTo method to draw the cover normally
-        origMosaicMenuItemPaintTo(self, bb, x, y)
+        orig_MosaicMenuItem_paint(self, bb, x, y)
         
         -- Get the cover image widget (target) and dimensions
         local target = self[1][1][1]
@@ -26,7 +26,7 @@ local function patchCoverBrowserCollectionIndicator(plugin)
             return
         end
 		
-        -- ADD collection indicator for books in collections
+        -- Add collection indicator for books in collections
         if self.menu and self.menu.name ~= "collections" and ReadCollection:isFileInCollections(self.filepath) then
             local left_margin = Screen:scaleBySize(7)
             local radius = Screen:scaleBySize(10)
@@ -55,4 +55,5 @@ local function patchCoverBrowserCollectionIndicator(plugin)
         end
     end
 end
+
 userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserCollectionIndicator)
