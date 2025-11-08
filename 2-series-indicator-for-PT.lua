@@ -1,6 +1,4 @@
---[[
-Patch to add series indicator to the right side of the book cover
-]]--
+--[[ Patch to add series indicator to the right side of the book cover ]]--
 local userpatch = require("userpatch")
 local logger = require("logger")
 local TextWidget = require("ui/widget/textwidget")
@@ -17,12 +15,12 @@ local function patchAddSeriesIndicator(plugin)
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
 
     -- Store the original paintTo method first
-    local origMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
+    local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
 
     -- Override paintTo method
     function MosaicMenuItem:paintTo(bb, x, y)
         -- Call the original paintTo method to draw the cover normally
-        origMosaicMenuItemPaintTo(self, bb, x, y)
+        orig_MosaicMenuItem_paint(self, bb, x, y)
         
         -- Get the cover image widget (target) and dimensions
         local target = self[1][1][1]
