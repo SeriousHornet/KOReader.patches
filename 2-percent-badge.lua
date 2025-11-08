@@ -1,6 +1,4 @@
---[[
-User patch for Cover Browser plugin to add progress percentage badges in top right corner
-]]--
+--[[ User patch for KOReader to add progress percentage badges in top right corner of cover ]]--
 --========================== [[Edit your preferences here]] ================================
 
 local text_size = 0.42 	-- Adjust from 0 to 1
