@@ -1,4 +1,4 @@
---[[ User patch for Project title plugin to add rounded corners to book covers ]]--
+--[[ User patch for KOReader to add rounded corners to book covers ]]--
 
 local userpatch  = require("userpatch")
 local logger     = require("logger")
