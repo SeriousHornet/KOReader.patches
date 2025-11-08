@@ -2,7 +2,7 @@
 
 Some of the patches I created for the default Coverbrowser in KOReader and Project: Title plugin.
 
-**NOTE: Patches with 'for-PT' in their filenames are only for Project: Title plugin. For coverbrowser download the ones normal ones without 'for-PT'.**
+**NOTE: Patches with 'for-PT' in their filenames are only for Project: Title plugin. For coverbrowser download the normal ones without 'for-PT'.**
 
 All these patches are tested on KOReader 2025.10 "Ghost" and Project: Title v3.5 and works perfectly.
 
