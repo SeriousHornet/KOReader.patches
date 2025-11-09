@@ -1,4 +1,4 @@
---[[ User patch for KOReader to replace a new set of status icons ]]--
+--[[ User patch for Project Title plugin to replace with new status icons ]]--
 
 local userpatch = require("userpatch")
 local IconWidget = require("ui/widget/iconwidget")
@@ -44,7 +44,8 @@ local function patchCoverBrowserStatusIcons(plugin)
         orig_MosaicMenuItem_paint(self, bb, x, y)
         
         -- Now draw our transparent status icons
-        if self.do_hint_opened and self.been_opened then
+        if (self.do_hint_opened and self.been_opened and self.percent_finished) or 
+   (self.menu.name == "history" and self.percent_finished) or (self.menu.name == "collections" and self.percent_finished) then
           
             local target = self[1][1][1]
             
@@ -96,4 +97,3 @@ local function patchCoverBrowserStatusIcons(plugin)
 end
 
 userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserStatusIcons)
-
