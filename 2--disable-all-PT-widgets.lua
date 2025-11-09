@@ -3,7 +3,7 @@ User patch for Project: Title - Disable specific UI elements
 This patch disables:
 1. Progress-related icons (trophy, pause, new, large_book)
 2. progress-related widgets
-3.Status widgets (complete/abandoned frames) 
+3. Status widgets (complete/abandoned frames) 
 4. Cover borders
 5. Series indicators
 ]]--
@@ -22,6 +22,7 @@ local function patchDisableUIElements(plugin)
     local Size = require("ui/size")
     local MosaicMenu = require("mosaicmenu")
     local ptutil = require("ptutil")
+    local BookInfoManager = require("bookinfomanager")
     
     -- Store original methods
     local orig_ImageWidget_paint = ImageWidget.paintTo
@@ -42,42 +43,12 @@ local function patchDisableUIElements(plugin)
         return orig_ImageWidget_paint(self, bb, x, y)
     end
     
-    -- Disable status widgets and series indicators
-    FrameContainer.paintTo = function(self, bb, x, y)
-        local child = self[1]
-        if child and child.file then
-            local trophy_pattern = plugin_dir .. "/resources/trophy.svg"
-            local pause_pattern = plugin_dir .. "/resources/pause.svg"
-            
-            if child.file == trophy_pattern or child.file == pause_pattern then
-                return
-            end
-        end
-        
-        if self[1] and type(self[1]) == "table" and self[1].text then
-            local text = self[1].text
-            if text:match("^#%s*%d+%s*$") then
-                return
-            end
-        end
-        return orig_FrameContainer_paint(self, bb, x, y)
-    end
-    
-    -- Disable series text indicators
-    TextWidget.paintTo = function(self, bb, x, y)
-        if self.text then
-            if self.text:match("^%s*%d+%s*$") then
-                return
-            end
-        end
-        return orig_TextWidget_paint(self, bb, x, y)
-    end
-    
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
 
     local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
     
     function MosaicMenuItem:paintTo(bb, x, y)
+        
         -- Disable cover borders
         local target = self[1][1][1]
         local original_properties = {}
@@ -94,7 +65,7 @@ local function patchDisableUIElements(plugin)
             target.padding = 0
         end
         
-        -- Store original reading status (ONCE)
+        -- Store original reading status
         local original_status = self.status
         local original_percent = self.percent_finished
         local original_progress_bar = self.show_progress_bar
@@ -108,12 +79,11 @@ local function patchDisableUIElements(plugin)
         local orig_ProgressWidget_paint = ProgressWidget.paintTo
         ProgressWidget.paintTo = function() end
     
-        -- Disable progress percentage text and other UI elements
-        local BookInfoManager = require("bookinfomanager")
-        
         -- Store original getSetting method
         local original_getSetting = BookInfoManager.getSetting
         local original_saveSetting = BookInfoManager.saveSetting
+        --local orig_series_mode = BookInfoManager:getSetting("series_mode")
+        
         
         -- Override getSetting to always return disabled state for these settings
         BookInfoManager.getSetting = function(self, setting_name)
@@ -121,6 +91,8 @@ local function patchDisableUIElements(plugin)
                 return true
             elseif setting_name == "show_pages_read_as_progress" then
                 return false
+            elseif setting_name == "series_mode" then
+                return nil
             else
                 return original_getSetting(self, setting_name)
             end
@@ -139,11 +111,11 @@ local function patchDisableUIElements(plugin)
         -- Set initial state
         BookInfoManager:saveSetting("hide_file_info", true)
         BookInfoManager:saveSetting("show_pages_read_as_progress", false)
-        
+
         -- Call original paint method
         orig_MosaicMenuItem_paint(self, bb, x, y)
         
-        -- Restore everything (ONCE)
+        -- Restore everything
         if target and original_properties.bordersize then
             target.bordersize = original_properties.bordersize
             target.background = original_properties.background
@@ -151,7 +123,7 @@ local function patchDisableUIElements(plugin)
             target.padding = original_properties.padding
         end
         
-        -- Restore original status (ONCE)
+        -- Restore original status
         self.status = original_status
         self.percent_finished = original_percent
         self.show_progress_bar = original_progress_bar
