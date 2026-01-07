@@ -7,8 +7,8 @@ local BD = require("ui/bidi")
 local function patchCoverBrowserStatusIcons(plugin)
     -- Store the original IconWidget.new
     local originalIconWidgetNew = IconWidget.new
-    
-    -- Override IconWidget.new to automatically add alpha = true for corner marks
+
+    -- Override IconWidget.new to automatically add alpha
     function IconWidget:new(o)
         -- Check if this is one of the corner mark icons
         local corner_icons = {
@@ -19,7 +19,7 @@ local function patchCoverBrowserStatusIcons(plugin)
             "dogear.complete.rtl",
             "star.white"
         }
-        
+
         -- If it's a corner mark icon, ensure alpha = true
         for _, icon_name in ipairs(corner_icons) do
             if o.icon == icon_name then
@@ -27,24 +27,24 @@ local function patchCoverBrowserStatusIcons(plugin)
                 break
             end
         end
-        
+
         return originalIconWidgetNew(self, o)
     end
-	
-	local MosaicMenu = require("mosaicmenu")
+
+        local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
-    
+
     if not MosaicMenuItem then return end
 
     local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
-    
+
     function MosaicMenuItem:paintTo(bb, x, y)
-       
-        -- Call original paintTo (this will NOT draw status icons now)
+
+        -- Call original paintTo
         orig_MosaicMenuItem_paint(self, bb, x, y)
-        
+
         -- Now draw our transparent status icons
-        if
+		if
           self.status == "complete"
           or self.status == "abandoned"
           or (
@@ -53,27 +53,27 @@ local function patchCoverBrowserStatusIcons(plugin)
               (self.do_hint_opened and self.been_opened)
               or self.menu.name == "history"
               or self.menu.name == "collections"
-            )
-          )
-        then
+			)
+			)
+		then
             local target = self[1][1][1]
-            
+
             -- Calculate icon size
             local corner_mark_size = math.floor(math.min(self.width, self.height) / 8)
-            
+
             -- Calculate bottom right corner position
             local ix, iy
-            
+
             if BD.mirroredUILayout() then
                 ix = math.floor((self.width - target.dimen.w)/2)
             else
                 ix = self.width - math.ceil((self.width - target.dimen.w)/2) - corner_mark_size
             end
             iy = self.height - math.ceil((self.height - target.dimen.h)/2) - corner_mark_size
-            
+
             -- Create and paint the appropriate status icon with transparency
             local mark
-            
+
             if self.status == "abandoned" then
                 mark = IconWidget:new{
                     icon = BD.mirroredUILayout() and "dogear.abandoned.rtl" or "dogear.abandoned",
@@ -97,7 +97,7 @@ local function patchCoverBrowserStatusIcons(plugin)
                     alpha = true,
                 }
             end
-            
+
             if mark then
                 mark:paintTo(bb, x + ix, y + iy)
             end
