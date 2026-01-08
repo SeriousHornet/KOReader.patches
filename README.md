@@ -41,7 +41,7 @@ This patch adds rounded corners to book covers in mosaic menu view.
 
 Download the icons `rounded.corner.bl.svg`, `rounded.corner.tl.svg`, `rounded.corner.br.svg` and `rounded.corner.tr.svg` from my icons folder and place the icons in `koreader/icons` in your e-reader.
 
-## 🞂 [2--strechted-rounded-covers.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/2--streched-rounded-covers.lua)
+## 🞂 [2--stretched-rounded-covers.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/2--stretched-rounded-covers.lua)
 
 <img width="720" height="325" alt="Rounded corners to book covers" src="https://github.com/user-attachments/assets/ed550b96-a4dc-4354-9e91-c38195d9596f" />
 
