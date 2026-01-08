@@ -1,4 +1,4 @@
---[[ Patch to add series indicator to the right side of the book cover ]]
+--[[ Patch to add series indicator to top right side of the book cover ]]
 --
 local Font = require("ui/font")
 local FrameContainer = require("ui/widget/container/framecontainer")
@@ -7,7 +7,6 @@ local userpatch = require("userpatch")
 local Screen = require("device").screen
 local BD = require("ui/bidi")
 local Blitbuffer = require("ffi/blitbuffer")
-local logger = require("logger")
 
 -- stylua: ignore start
 --========================== [[Edit your preferences here]] ================================
@@ -23,19 +22,23 @@ local background_color = Blitbuffer.COLOR_GRAY_E           -- Choose your desire
 local function patchAddSeriesIndicator(plugin)
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+    local BookInfoManager = require("bookinfomanager")
 
-    if MosaicMenuItem.patched_series_badge then
+    if not MosaicMenuItem then
+        return
+    end
+	
+	if MosaicMenuItem.patched_series_badge then
         return
     end
     MosaicMenuItem.patched_series_badge = true
-
-    local BookInfoManager = require("bookinfomanager")
-
+	
     -- Store original methods
     local orig_MosaicMenuItem_init = MosaicMenuItem.init
     local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
+    local orig_MosaicMenuItem_free = MosaicMenuItem.free
 
-    -- Override init to compute series info once
+     -- Override init to compute series info once
     function MosaicMenuItem:init()
         orig_MosaicMenuItem_init(self)
 
@@ -44,10 +47,35 @@ local function patchAddSeriesIndicator(plugin)
             return
         end
 
-        -- Get book info and check for series
-        local bookinfo = BookInfoManager:getBookInfo(self.filepath, false)
-        if bookinfo and bookinfo.series and bookinfo.series_index and bookinfo.series_index ~= 0 then
-            self.series_index = bookinfo.series_index
+		-- Get book info once during initialization
+		local bookinfo = BookInfoManager:getBookInfo(self.filepath, false)
+		if bookinfo and bookinfo.series and bookinfo.series_index then
+			self.series_index = bookinfo.series_index
+			
+			-- Create the series badge widget here.
+			local series_text = TextWidget:new{
+				text = "#" .. self.series_index,
+				face = Font:getFace("cfont", font_size),
+				bold = true,
+				fgcolor = text_color,
+			}
+			
+			self.series_badge = FrameContainer:new{
+				linesize = Screen:scaleBySize(2),
+				radius = Screen:scaleBySize(border_corner_radius),
+				color = border_color,
+				bordersize = border_thickness,
+				background = background_color,
+				padding = Screen:scaleBySize(2),
+				margin = 0,
+				series_text,
+			}
+			
+			-- Store text widget reference for cleanup
+			self._series_text = series_text	
+
+			-- Mark that we have a series badge
+			self.has_series_badge = true
         end
     end
 
@@ -55,73 +83,58 @@ local function patchAddSeriesIndicator(plugin)
         -- Call original paintTo
         orig_MosaicMenuItem_paint(self, bb, x, y)
 
+
         -- Draw series badge if applicable
-        if not self.series_index then
-            return
-        end
-
-        -- Only draw if we have series info
-        local target = self[1][1][1]
-        if not target or not target.dimen then
-            return
-        end
-
-        -- Get book info
-        local series_text = TextWidget:new({
-            text = "#" .. self.series_index,
-            face = Font:getFace("cfont", font_size),
-            bold = true,
-            fgcolor = text_color,
-        })
-
-        local series_badge = FrameContainer:new({
-            linesize = Screen:scaleBySize(2),
-            radius = Screen:scaleBySize(border_corner_radius),
-            color = border_color,
-            bordersize = border_thickness,
-            background = background_color,
-            padding = Screen:scaleBySize(2),
-            margin = 0,
-            series_text,
-        })
-
-        -- Calculate position once
-        local d_w = math.ceil(target.dimen.w / 5)
-        local d_h = math.ceil(target.dimen.h / 10)
-
-        local ix, iy = 0, 0
-
-        if BD.mirroredUILayout() then
-            ix = -math.floor(d_w) -- Half outside on left side
-            if not self.overflow_checked then
-                local x_overflow_left = x - target.dimen.x + ix
-                if x_overflow_left > 0 then
-                    self.refresh_dimen = self[1].dimen:copy()
-                    self.refresh_dimen.x = self.refresh_dimen.x - x_overflow_left
-                    self.refresh_dimen.w = self.refresh_dimen.w + x_overflow_left
-                end
-                self.overflow_checked = true
+        if self.has_series_badge and self.series_badge then
+            
+            local target = self[1][1][1]
+            if not target or not target.dimen then
+                return
             end
-        else
-            ix = target.dimen.w - math.floor(d_w) -- Half outside on right side
-            if not self.overflow_checked then
-                local x_overflow_right = target.dimen.x + ix + d_w - x - self.dimen.w
-                if x_overflow_right > 0 then
-                    self.refresh_dimen = self[1].dimen:copy()
-                    self.refresh_dimen.w = self.refresh_dimen.w + x_overflow_right
-                end
-                self.overflow_checked = true
+
+            -- Calculate position
+            local d_w = math.ceil(target.dimen.w / 5)
+            local d_h = math.ceil(target.dimen.h / 10)
+
+			local ix, iy = 0, 5
+            
+            if BD.mirroredUILayout() then
+                ix = -math.floor(d_w)  -- on left side
+            else
+                ix = target.dimen.w - math.floor(d_w)  -- on right side
             end
+
+            -- Calculate badge position (relative to target)
+			local series_badge_size = self.series_badge:getSize()
+			local badge_x = target.dimen.x + ix + (d_w - series_badge_size.w) / 2
+			local badge_y = target.dimen.y + iy + (d_h - series_badge_size.h) / 2
+
+            -- Paint the badge
+            self.series_badge:paintTo(bb, badge_x, badge_y)
         end
-
-        -- Calculate badge position (relative to target)
-        local series_badge_size = series_badge:getSize()
-        local badge_x = target.dimen.x + ix + (d_w - series_badge_size.w) / 2
-        local badge_y = target.dimen.y + iy + (d_h - series_badge_size.h) / 2
-
-        -- Paint the cached badge
-        series_badge:paintTo(bb, badge_x, badge_y)
     end
+	
+	if orig_MosaicMenuItem_free then
+		function MosaicMenuItem:free()
+			-- Free our created widgets
+			if self._series_text then
+				self._series_text:free(true)
+				self._series_text = nil
+			end
+			
+			if self.series_badge then
+				self.series_badge:free(true)
+				self.series_badge = nil
+			end
+			
+			-- Clear other instance variables
+			self.series_index = nil
+			self.has_series_badge = nil
+			
+			-- Call original free
+			orig_MosaicMenuItem_free(self)
+		end
+	end
 end
 
 userpatch.registerPatchPluginFunc("coverbrowser", patchAddSeriesIndicator)
