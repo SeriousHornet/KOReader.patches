@@ -33,7 +33,7 @@ This patch disables all the progress and status related widgets from **PROJECT: 
 You **MUST** install this first if you are using **Project: Title** plugin and if you want to use any of the other patches in this repo.
 
 
-## 🞂 [2--rounded-corners.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/2--rounded-corners.lua)
+## 🞂 [2--rounded-covers.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/2--rounded-covers.lua)
 
 <img width="720" height="325" alt="Rounded corners to book covers" src="https://github.com/user-attachments/assets/ed550b96-a4dc-4354-9e91-c38195d9596f" />
 
@@ -41,6 +41,15 @@ This patch adds rounded corners to book covers in mosaic menu view.
 
 Download the icons `rounded.corner.bl.svg`, `rounded.corner.tl.svg`, `rounded.corner.br.svg` and `rounded.corner.tr.svg` from my icons folder and place the icons in `koreader/icons` in your e-reader.
 
+## 🞂 [2--strechted-rounded-covers.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/2--streched-rounded-covers.lua)
+
+<img width="720" height="325" alt="Rounded corners to book covers" src="https://github.com/user-attachments/assets/ed550b96-a4dc-4354-9e91-c38195d9596f" />
+
+This patch stretches the book covers to the maximum available cell space and adds rounded corners as well in mosaic menu view. 
+
+Download the icons `rounded.corner.bl.svg`, `rounded.corner.tl.svg`, `rounded.corner.br.svg` and `rounded.corner.tr.svg` from my icons folder and place the icons in `koreader/icons` in your e-reader.
+
+**NOTE:** Please remove the cache and refetch all covers for this to work. Covers may not stretch on first browsing but it will be properly stretched when browsing through them again.
 
 ## 🞂 [2-new-status-icons.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/2-new-status-icons.lua)
 
@@ -84,10 +93,12 @@ Copy the `2-percent-badge.lua` to `koreader/patches` and copy the `percent.badge
 
 This patch adds a small rectangular indicator to the top right of the book cover to mean that the book is part of a series.
 
+
 ## [2-series-badge-numbered.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/2-series-badge-numbered.lua)
 <img width="480" height="140" alt="msrdc_nTY5fVGvfJ" src="https://github.com/user-attachments/assets/56539347-a408-434c-bfb0-41290449bf24" />
 
 This patch adds a small rounded series badge to the top right of the book cover to show the series number.
+
 
 ## 🞂 [2-new-progress-bar.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/2-new-progress-bar.lua)
 
@@ -103,7 +114,7 @@ This patch adds a clean rounded rectangular progress bar to the bottom of the co
 This adds a star in a black circle to left top corner of the book to indicate that the book is part of a collection
 
 
-## 🞂 [2-faded-finished-books.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/2-faded-finished-books.lua)
+## 🞂 [20-faded-finished-books.lua](https://github.com/SeriousHornet/KOReader.patches/blob/main/20-faded-finished-books.lua)
 
 <img width="720" height="325" alt="Faded look to finished books" src="https://github.com/user-attachments/assets/a7b3903c-51a2-439d-a990-296871325148" />
 
