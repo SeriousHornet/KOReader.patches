@@ -26,10 +26,11 @@ local Screen = Device.screen
 local logger = require("logger")
 
 --========================== Edit your preferences here ================================
-local aspect_ratio = 2 / 3
-local stretch_limit = 50
-local fill = false
-local file_count_size = 12
+local aspect_ratio = 2 / 3          -- adjust aspect ratio of folder cover
+local stretch_limit = 50            -- adjust the stretching limit
+local fill = false                  -- set true to fill the entire cell ignoring aspect ratio
+local file_count_size = 12          -- font size of the file count badge
+local folder_name = true            -- set to false to remove folder title from the center
 --======================================================================================
 
 local FolderCover = {
@@ -216,7 +217,7 @@ local function patchCoverBrowser(plugin)
 
     local settings = {
         name_centered = BooleanSetting(_("Folder name centered"), "folder_name_centered", true),
-        show_folder_name = BooleanSetting(_("Show folder name"), "folder_name_show", true),
+        show_folder_name = BooleanSetting(_("Show folder name"), "folder_name_show", folder_name),
     }
 
     function MosaicMenuItem:update(...)
