@@ -23,24 +23,21 @@ local function patchCoverBrowserFaded(plugin)
     local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
 
     function MosaicMenuItem:paintTo(bb, x, y)
-        -- Paint normally first
-        orig_MosaicMenuItem_paint(self, bb, x, y)
+        -- Paint normally first (covers + rounded corners)
+        if orig_MosaicMenuItem_paint then
+        orig_MosaicMenuItem_paint(self, bb, x, y)   
+        end
 
         -- Only apply fade once per item using a flag
         if self.status == "complete" then
-            -- Try to locate the same "target" the base code uses
-            local target = nil
-            if self[1] and self[1][1] and self[1][1][1] then
-                target = self[1][1][1]
-            end
 
-            if target then
-                -- Compute outer frame rect
-                local has_wh = (target.width and target.height)
-                local has_dimen = (target.dimen and target.dimen.w and target.dimen.h)
+            -- finds the actual cover image widget e.g. if stretched to new aspect ratio
+            local target = self[1] and self[1][1] and self[1][1][1]
 
-                local tw = has_wh and target.width or (has_dimen and target.dimen.w) or self.width
-                local th = has_wh and target.height or (has_dimen and target.dimen.h) or self.height
+            -- The fade rectangle exactly matches the visible cover size. Rounded corners align correctly.
+            if target and target.dimen then
+                local tw = target.dimen.w
+                local th = target.dimen.h
 
                 -- Centered position
                 local fx = x + math.floor((self.width - tw) / 2)
