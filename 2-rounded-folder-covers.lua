@@ -135,6 +135,8 @@ local function patchCoverBrowser(plugin)
     local original_update = MosaicMenuItem.update
 
     local max_img_w, max_img_h
+    -- used by StretchingImageWidget and _setFolderCover, they will hold dimensions after aspect ratio is applied
+    local adjusted_w, adjusted_h
 
     if not MosaicMenuItem.patched_aspect_ratio then
         MosaicMenuItem.patched_aspect_ratio = true
@@ -158,30 +160,39 @@ local function patchCoverBrowser(plugin)
             local orig_MosaicMenuItem_init = MosaicMenuItem.init
 
             function MosaicMenuItem:init()
+                if orig_MosaicMenuItem_init then orig_MosaicMenuItem_init(self) end
                 if self.width and self.height then
                     local border_size = Size.border.thin
                     max_img_w = self.width - 2 * border_size
                     max_img_h = self.height - 2 * border_size
+
+                    -- math.floor is applied when messing with the ratio
+                    if fill then
+                        adjusted_w = max_img_w
+                        adjusted_h = max_img_h
+                    else
+                        local ratio = aspect_ratio
+                        if max_img_w / max_img_h > ratio then
+                            adjusted_h = max_img_h
+                            adjusted_w = math.floor(max_img_h * ratio)
+                        else
+                            adjusted_w = max_img_w
+                            adjusted_h = math.floor(max_img_w / ratio)
+                        end
+                    end
                 end
-                if orig_MosaicMenuItem_init then orig_MosaicMenuItem_init(self) end
             end
 
             local StretchingImageWidget = local_ImageWidget:extend({})
             StretchingImageWidget.init = function(self)
                 if local_ImageWidget.init then local_ImageWidget.init(self) end
-                if not max_img_w and not max_img_h then return end
+                if not adjusted_w or not adjusted_h then return end
                 
                 self.scale_factor = nil
                 self.stretch_limit_percentage = stretch_limit
-                
-                local ratio = fill and (max_img_w / max_img_h) or aspect_ratio
-                if max_img_w / max_img_h > ratio then
-                    self.height = max_img_h
-                    self.width = max_img_h * ratio
-                else
-                    self.width = max_img_w
-                    self.height = max_img_w / ratio
-                end
+                -- no need to recalculate ratio, we use  adjusted_w/adjusted_h
+                self.width = adjusted_w
+                self.height = adjusted_h
             end
 
             debug.setupvalue(MosaicMenuItem.update, setupvalue_n, StretchingImageWidget)
@@ -190,6 +201,10 @@ local function patchCoverBrowser(plugin)
     end
 
     local function getAspectRatioAdjustedDimensions(width, height, border_size)
+        if adjusted_w and adjusted_h then
+            return { w = adjusted_w + 2 * border_size, h = adjusted_h + 2 * border_size }
+        end
+        -- fallback
         local available_w = width - 2 * border_size
         local available_h = height - 2 * border_size
         local ratio = fill and (available_w / available_h) or aspect_ratio
@@ -218,7 +233,7 @@ local function patchCoverBrowser(plugin)
     end
 
     local settings = {
-        name_centered = BooleanSetting(_("Folder name centered"), "folder_name_centered", true),
+        name_centered = BooleanSetting(_("Folder name centered"), "folder_name_centered", false),
         show_folder_name = BooleanSetting(_("Show folder name"), "folder_name_show", folder_name),
     }
 
