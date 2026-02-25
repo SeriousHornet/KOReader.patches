@@ -3,9 +3,9 @@
 
 -- stylua: ignore start
 --========================== [[Edit your preferences here]] ================================
-local text_size = 0.50	-- Adjust from 0 to 1
-local move_on_x = 5		-- Adjust how far left the badge should sit. 
-local move_on_y = -1	-- Adjust how far up the badge should sit.
+local text_size = 0.30	-- Adjust from 0 to 1
+local move_on_x = -5		-- Adjust how far left the badge should sit. 
+local move_on_y = -13	-- Adjust how far up the badge should sit.
 local badge_w = 70		-- Adjust badge width
 local badge_h = 40		-- Adjust badge height
 local bump_up = 1		-- Adjust text position  
@@ -62,7 +62,7 @@ local function patchCoverBrowserProgressPercent(plugin)
             local percent_text = string.format("%d%%", math.floor(self.percent_finished * 100))
             local font_size = math.floor(corner_mark_size * text_size)
             local percent_widget = TextWidget:new({
-                text = percent_text,
+                text = "✔",
                 font_size = font_size,
                 face = Font:getFace("cfont", font_size),
                 alignment = "center",
