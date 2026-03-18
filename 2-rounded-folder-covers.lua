@@ -233,7 +233,7 @@ local function patchCoverBrowser(plugin)
     end
 
     local settings = {
-        name_centered = BooleanSetting(_("Folder name centered"), "folder_name_centered", false),
+        name_centered = BooleanSetting(_("Folder name centered"), "folder_name_centered", true),
         show_folder_name = BooleanSetting(_("Show folder name"), "folder_name_show", folder_name),
     }
 
