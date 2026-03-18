@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+<svg
+   width="800px"
+   height="800px"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="tab_stats.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.729375"
+     inkscape:cx="392.80206"
+     inkscape:cy="424.3359"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      .cls-1 {
+        fill: #101010;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path
+     id="stats1"
+     class="cls-1"
+     d="M 22.622929,23.58865 H 1.3770703 A 0.96572089,0.96572089 0 0 1 0.41134932,22.622929 V 1.3770702 a 0.96572089,0.96572089 0 0 1 1.93144178,0 V 21.657208 H 22.622929 a 0.965721,0.965721 0 0 1 0,1.931442 z M 17.794326,19.725768 A 0.96572089,0.96572089 0 0 1 16.828605,18.760047 V 8.1371164 a 0.965721,0.965721 0 0 1 1.931442,0 V 18.760047 a 0.96572089,0.96572089 0 0 1 -0.965721,0.965721 z m -3.862884,0 v 0 A 0.96572089,0.96572089 0 0 1 12.965721,18.760047 V 12 a 0.96572089,0.96572089 0 0 1 0.965721,-0.965721 v 0 A 0.96572089,0.96572089 0 0 1 14.897163,12 v 6.760047 a 0.96572089,0.96572089 0 0 1 -0.965721,0.965721 z m -3.862884,0 A 0.96572089,0.96572089 0 0 1 9.1028374,18.760047 V 3.308512 a 0.96572089,0.96572089 0 0 1 1.9314416,0 v 15.451535 a 0.96572089,0.96572089 0 0 1 -0.965721,0.965721 z m -3.8628833,0 A 0.96572089,0.96572089 0 0 1 5.2399538,18.760047 V 9.1028374 a 0.9657209,0.9657209 0 0 1 1.9314418,0 v 9.6572096 a 0.96572089,0.96572089 0 0 1 -0.9657209,0.965721 z"
+     style="fill:#101010;fill-opacity:1;stroke:#ffffff;stroke-width:0.54;stroke-dasharray:none;stroke-opacity:1"
+     inkscape:label="stats1" />
+</svg>
