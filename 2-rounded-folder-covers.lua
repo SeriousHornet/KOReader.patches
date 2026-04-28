@@ -311,12 +311,40 @@ local function patchCoverBrowser(plugin)
             folder_name_widget = VerticalSpan:new { width = 0 }
         end
         
-        local nbitems_widget
-        local item_count = 0
-        if self.mandatory then
-            local count_str = self.mandatory:match("(%d+)")
-            if count_str then item_count = tonumber(count_str) end
-        end
+		local nbitems_widget
+		local file_count = 0
+		local folder_count = 0
+
+		local entries = self.menu:genItemTableFromPath(self.entry.path)
+
+		local function isCoverFile(path)
+			if not path then return false end
+			local lower = path:lower()
+
+			if lower:match("/%.cover%.") then return true end
+
+			for _, ext in ipairs(FolderCover.exts) do
+				if lower:sub(-#ext) == ext then
+					return true
+				end
+			end
+			return false
+		end
+
+		if entries then
+			for _, entry in ipairs(entries) do
+				if entry.is_file or entry.file then
+					if not isCoverFile(entry.path) then
+						file_count = file_count + 1
+					end
+				else
+					folder_count = folder_count + 1
+				end
+			end
+		end
+
+		local item_count = file_count > 0 and file_count or folder_count
+		--local item_count = file_count + folder_count
         
         if item_count > 0 then
             local nbitems = TextWidget:new {
