@@ -519,28 +519,24 @@ local function onTabRestart()
 end
 
 local function onTabStats()
+    local fm = FileManager.instance
 
-    -- Check both possible patch filenames
-    local patch_paths = {
-        "./patches/2-reading-insights-popup-colored.lua",
-        "./patches/2-reading-insights-popup.lua",
-    }
-    
-    local patch_found = false
-    for _, path in ipairs(patch_paths) do
-        if lfs.attributes(path, "mode") == "file" then
-            patch_found = true
-            break
-        end
-    end
-    
-    if patch_found then
-		setActiveTab("stats")
+    -- readinginsights.koplugin registers itself on the FileManager/ReaderUI
+    -- instance under its `name` field ("readinginsights"), same as every
+    -- other plugin this file talks to (fm.rakuyomi, fm["Z-library"], etc).
+    -- It's still built on a WidgetContainer that listens for the same
+    -- "ShowReadingInsightsPopup" event the old standalone patch used, so
+    -- only this installed-check needed to change - the event dispatch below
+    -- did not.
+    local reading_insights = fm and fm.readinginsights
+
+    if reading_insights then
+        setActiveTab("stats")
         UIManager:sendEvent(Event:new("ShowReadingInsightsPopup"))
     else
         UIManager:show(
             InfoMessage:new {
-                text = _("Reading Insights Popup patch is not installed.")
+                text = _("Reading insights plugin (readinginsights.koplugin) is not installed.")
             }
         )
     end
