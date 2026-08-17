@@ -103,4 +103,4 @@ local function patchBookCoverRoundedCorners(plugin)
 
     logger.info("Aspect ratio control applied successfully")
 end
-userpatch.registerPatchPluginFunc("coverbrowser", patchBookCoverRoundedCorners)
+userpatch.registerPatchPluginFunc("projecttitle", patchBookCoverRoundedCorners)

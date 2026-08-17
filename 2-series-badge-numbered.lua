@@ -137,4 +137,4 @@ local function patchAddSeriesIndicator(plugin)
 	end
 end
 
-userpatch.registerPatchPluginFunc("coverbrowser", patchAddSeriesIndicator)
+userpatch.registerPatchPluginFunc("projecttitle", patchAddSeriesIndicator)

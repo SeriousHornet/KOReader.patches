@@ -218,4 +218,4 @@ local function patchAspectRatioWithRoundedCorners(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("coverbrowser", patchAspectRatioWithRoundedCorners)
+userpatch.registerPatchPluginFunc("projecttitle", patchAspectRatioWithRoundedCorners)
