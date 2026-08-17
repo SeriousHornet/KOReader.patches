@@ -105,4 +105,4 @@ local function patchCoverBrowserProgressPercent(plugin)
         end
     end
 end
-userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserProgressPercent)
+userpatch.registerPatchPluginFunc("projecttitle", patchCoverBrowserProgressPercent)

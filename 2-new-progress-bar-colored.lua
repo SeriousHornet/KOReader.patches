@@ -126,4 +126,4 @@ local function patchCustomProgress(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("coverbrowser", patchCustomProgress)
+userpatch.registerPatchPluginFunc("projecttitle", patchCustomProgress)

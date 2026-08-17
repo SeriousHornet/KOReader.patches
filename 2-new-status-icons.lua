@@ -113,4 +113,4 @@ local function patchCoverBrowserStatusIcons(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserStatusIcons)
+userpatch.registerPatchPluginFunc("projecttitle", patchCoverBrowserStatusIcons)
