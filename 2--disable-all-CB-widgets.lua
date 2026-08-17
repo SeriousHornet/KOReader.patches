@@ -57,4 +57,4 @@ local function patchDisableUIElements(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("projecttitle", patchDisableUIElements)
+userpatch.registerPatchPluginFunc("coverbrowser", patchDisableUIElements)
