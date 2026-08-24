@@ -108,4 +108,4 @@ local function patchCoverBrowserPageCount(plugin)
         end
     end
 end
-userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserPageCount)
+userpatch.registerPatchPluginFunc("projecttitle", patchCoverBrowserPageCount)

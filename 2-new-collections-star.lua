@@ -62,4 +62,4 @@ local function patchCoverBrowserCollectionIndicator(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserCollectionIndicator)
+userpatch.registerPatchPluginFunc("projecttitle", patchCoverBrowserCollectionIndicator)

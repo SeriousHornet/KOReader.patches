@@ -122,4 +122,4 @@ local function patchBookCoverRoundedCorners(plugin)
         end
     end
 end
-userpatch.registerPatchPluginFunc("coverbrowser", patchBookCoverRoundedCorners)
+userpatch.registerPatchPluginFunc("projecttitle", patchBookCoverRoundedCorners)

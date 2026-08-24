@@ -51,4 +51,4 @@ local function patchCoverBrowserFaded(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserFaded)
+userpatch.registerPatchPluginFunc("projecttitle", patchCoverBrowserFaded)
