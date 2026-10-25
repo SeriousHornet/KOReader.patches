@@ -1,3 +1,6 @@
+--[[ User patch for KOReader to add rounded corners to folder covers ]]
+--
+
 local AlphaContainer = require("ui/widget/container/alphacontainer")
 local BD = require("ui/bidi")
 local Blitbuffer = require("ffi/blitbuffer")
@@ -125,9 +128,15 @@ for k, name in pairs(icons) do
     end
 end
 
-local function patchCoverBrowser(plugin)
+local function patchFolderCovers(plugin)
     local MosaicMenu = require("mosaicmenu")
-    local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+    local builder = MosaicMenu._simpleui_native_build or MosaicMenu._updateItemsBuildUI
+    local MosaicMenuItem = userpatch.getUpValue(builder, "MosaicMenuItem")
+
+    if not MosaicMenuItem then
+        logger.warn("Patch: MosaicMenuItem not found; skipping")
+        return
+    end
     if not MosaicMenuItem or MosaicMenuItem.rounded_folder_covers then return end
     MosaicMenuItem.rounded_folder_covers = true
     
@@ -489,4 +498,6 @@ local function patchCoverBrowser(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("projecttitle", patchCoverBrowser)
+local disabled = G_reader_settings:readSetting("plugins_disabled") or {}
+local plugin_name = disabled["coverbrowser"] and "projecttitle" or "coverbrowser"
+userpatch.registerPatchPluginFunc(plugin_name, patchFolderCovers)

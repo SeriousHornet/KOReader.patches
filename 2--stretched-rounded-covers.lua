@@ -1,4 +1,4 @@
---[[ Patch to stretch covers to aspect-ration and add rounded corners to book covers ]]
+--[[ User patch to stretch covers to aspect-ratio AND add rounded corners to book covers ]]
 --
 
 local IconWidget = require("ui/widget/iconwidget")
@@ -20,10 +20,11 @@ local Fill = false                  -- if true, covers will fit the full grid ce
 
 local function patchAspectRatioWithRoundedCorners(plugin)
     local MosaicMenu = require("mosaicmenu")
-    local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+    local builder = MosaicMenu._simpleui_native_build or MosaicMenu._updateItemsBuildUI
+    local MosaicMenuItem = userpatch.getUpValue(builder, "MosaicMenuItem")
 
     if not MosaicMenuItem then
-        logger.warn("Failed to find MosaicMenuItem")
+        logger.warn("Patch: MosaicMenuItem not found; skipping")
         return
     end
 
@@ -218,4 +219,4 @@ local function patchAspectRatioWithRoundedCorners(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("projecttitle", patchAspectRatioWithRoundedCorners)
+userpatch.registerPatchPluginFunc("coverbrowser", patchAspectRatioWithRoundedCorners)

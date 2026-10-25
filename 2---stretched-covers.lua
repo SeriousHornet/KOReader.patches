@@ -1,4 +1,4 @@
---[[ Patch to stretch the book covers to set aspect-ratio ]]
+--[[ User patch to stretch the book covers to set aspect-ratio ]]
 --
 
 -- stylua: ignore start
@@ -16,7 +16,13 @@ local userpatch = require("userpatch")
 
 local function patchBookCoverRoundedCorners(plugin)
     local MosaicMenu = require("mosaicmenu")
-    local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+    local builder = MosaicMenu._simpleui_native_build or MosaicMenu._updateItemsBuildUI
+    local MosaicMenuItem = userpatch.getUpValue(builder, "MosaicMenuItem")
+
+    if not MosaicMenuItem then
+        logger.warn("Patch: MosaicMenuItem not found; skipping")
+        return
+    end
 
     if MosaicMenuItem.patched_stretched_covers then
         return
@@ -103,4 +109,6 @@ local function patchBookCoverRoundedCorners(plugin)
 
     logger.info("Aspect ratio control applied successfully")
 end
-userpatch.registerPatchPluginFunc("projecttitle", patchBookCoverRoundedCorners)
+local disabled = G_reader_settings:readSetting("plugins_disabled") or {}
+local plugin_name = disabled["coverbrowser"] and "projecttitle" or "coverbrowser"
+userpatch.registerPatchPluginFunc(plugin_name, patchBookCoverRoundedCorners)

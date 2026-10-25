@@ -1,4 +1,4 @@
---[[ Patch to add series indicator to top right side of the book cover ]]
+--[[ User patch for KOReader to add series badge to the book covers ]]
 --
 local Font = require("ui/font")
 local FrameContainer = require("ui/widget/container/framecontainer")
@@ -21,7 +21,13 @@ local background_color = Blitbuffer.COLOR_GRAY_E           -- Choose your desire
 
 local function patchAddSeriesIndicator(plugin)
     local MosaicMenu = require("mosaicmenu")
-    local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+    local builder = MosaicMenu._simpleui_native_build or MosaicMenu._updateItemsBuildUI
+    local MosaicMenuItem = userpatch.getUpValue(builder, "MosaicMenuItem")
+
+    if not MosaicMenuItem then
+        logger.warn("Patch: MosaicMenuItem not found; skipping")
+        return
+    end
     local BookInfoManager = require("bookinfomanager")
 
     if not MosaicMenuItem then
@@ -137,4 +143,6 @@ local function patchAddSeriesIndicator(plugin)
 	end
 end
 
-userpatch.registerPatchPluginFunc("projecttitle", patchAddSeriesIndicator)
+local disabled = G_reader_settings:readSetting("plugins_disabled") or {}
+local plugin_name = disabled["coverbrowser"] and "projecttitle" or "coverbrowser"
+userpatch.registerPatchPluginFunc(plugin_name, patchAddSeriesIndicator)

@@ -1,4 +1,4 @@
---[[ Patch to add progress percentage badges in top right corner of cover ]]
+--[[ User patch for KOReader to add progress percentage badges in top right corner of cover ]]
 --
 
 -- stylua: ignore start
@@ -23,7 +23,13 @@ local logger = require("logger")
 local function patchCoverBrowserProgressPercent(plugin)
     -- Grab Cover Grid mode and the individual Cover Grid items
     local MosaicMenu = require("mosaicmenu")
-    local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+    local builder = MosaicMenu._simpleui_native_build or MosaicMenu._updateItemsBuildUI
+    local MosaicMenuItem = userpatch.getUpValue(builder, "MosaicMenuItem")
+
+    if not MosaicMenuItem then
+        logger.warn("Patch: MosaicMenuItem not found; skipping")
+        return
+    end
 
     if MosaicMenuItem.patched_percent_badge then
         return
@@ -105,4 +111,7 @@ local function patchCoverBrowserProgressPercent(plugin)
         end
     end
 end
-userpatch.registerPatchPluginFunc("projecttitle", patchCoverBrowserProgressPercent)
+
+local disabled = G_reader_settings:readSetting("plugins_disabled") or {}
+local plugin_name = disabled["coverbrowser"] and "projecttitle" or "coverbrowser"
+userpatch.registerPatchPluginFunc(plugin_name, patchCoverBrowserProgressPercent)

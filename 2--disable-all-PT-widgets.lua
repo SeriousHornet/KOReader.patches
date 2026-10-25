@@ -39,7 +39,13 @@ local function patchDisableUIElements(plugin)
         end
     end
 
-    local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+    local builder = MosaicMenu._simpleui_native_build or MosaicMenu._updateItemsBuildUI
+    local MosaicMenuItem = userpatch.getUpValue(builder, "MosaicMenuItem")
+
+    if not MosaicMenuItem then
+        logger.warn("Patch: MosaicMenuItem not found; skipping")
+        return
+    end
 
     if MosaicMenuItem.patched_disable_all_pt_widgets then
         return

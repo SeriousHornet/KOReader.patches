@@ -8,6 +8,7 @@ This patch disables:
 --
 
 local userpatch = require("userpatch")
+local logger = require("logger")
 
 local function patchDisableUIElements(plugin)
     local ProgressWidget = require("ui/widget/progresswidget")
@@ -16,7 +17,13 @@ local function patchDisableUIElements(plugin)
     local BookInfoManager = require("bookinfomanager")
 
     -- Disable progress bar, collection star, and description hint
-    local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+    local builder = MosaicMenu._simpleui_native_build or MosaicMenu._updateItemsBuildUI
+    local MosaicMenuItem = userpatch.getUpValue(builder, "MosaicMenuItem")
+
+    if not MosaicMenuItem then
+        logger.warn("Patch: MosaicMenuItem not found; skipping")
+        return
+    end
 
     if MosaicMenuItem.patched_disable_all_cb_widgets then
         return

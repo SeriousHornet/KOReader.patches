@@ -1,4 +1,4 @@
---[[ User patch for Project Title plugin to add collection indicator in mosaic view ]]
+--[[ User patch for KOReader to add collection indicator in mosaic view ]]
 --
 
 local Blitbuffer = require("ffi/blitbuffer")
@@ -11,7 +11,13 @@ local Screen = require("device").screen
 local function patchCoverBrowserCollectionIndicator(plugin)
     -- Grab Cover Grid mode and the individual Cover Grid items
     local MosaicMenu = require("mosaicmenu")
-    local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+    local builder = MosaicMenu._simpleui_native_build or MosaicMenu._updateItemsBuildUI
+    local MosaicMenuItem = userpatch.getUpValue(builder, "MosaicMenuItem")
+
+    if not MosaicMenuItem then
+        logger.warn("Patch: MosaicMenuItem not found; skipping")
+        return
+    end
 
     if MosaicMenuItem.patched_new_collections_star then
         return
@@ -62,4 +68,6 @@ local function patchCoverBrowserCollectionIndicator(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("projecttitle", patchCoverBrowserCollectionIndicator)
+local disabled = G_reader_settings:readSetting("plugins_disabled") or {}
+local plugin_name = disabled["coverbrowser"] and "projecttitle" or "coverbrowser"
+userpatch.registerPatchPluginFunc(plugin_name, patchCoverBrowserCollectionIndicator)
