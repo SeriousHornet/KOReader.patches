@@ -219,4 +219,6 @@ local function patchAspectRatioWithRoundedCorners(plugin)
     end
 end
 
-userpatch.registerPatchPluginFunc("coverbrowser", patchAspectRatioWithRoundedCorners)
+local disabled = G_reader_settings:readSetting("plugins_disabled") or {}
+local plugin_name = disabled["coverbrowser"] and "projecttitle" or "coverbrowser"
+userpatch.registerPatchPluginFunc(plugin_name, patchAspectRatioWithRoundedCorners)
